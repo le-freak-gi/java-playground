@@ -2,6 +2,7 @@ package urlConnectionExample;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -23,42 +24,27 @@ public class HttpOrHttpsURLConnectionExample {
 	public static String connectHttpUrl(String strUrl) {
 		URL url;
 		HttpURLConnection con = null;
-		BufferedReader bufferedReader = null;
-		StringBuilder sb = null;
+		String rtnval =null;
 		try {
 			url = new URL(strUrl);
 			con = (HttpURLConnection) url.openConnection();
-			bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream())); 
-			String line =null;
-			sb= new StringBuilder();
-			while((line=bufferedReader.readLine())!=null) {
-				sb.append(line);
-				sb.append(System.lineSeparator());
-			}
+			rtnval =getStringFromInputStream(con.getInputStream());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(bufferedReader!=null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 			if(con!=null) {
 				con.disconnect();
 			}
 		}
-		return sb==null?null:sb.toString();
+		return rtnval;
 	}
-
+	
 	public static String connectHttpsUrl(String strUrl) {
 		URL url;
 		HttpsURLConnection con = null;
-		BufferedReader bufferedReader = null;
-		StringBuilder sb = null;
+		String rtnval =null;
 		try {
 			url = new URL(strUrl);
 			/*
@@ -68,7 +54,24 @@ public class HttpOrHttpsURLConnectionExample {
 			SSLContext.setDefault(context);
 			*/
 			con = (HttpsURLConnection) url.openConnection();
-			bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream())); 
+			rtnval =getStringFromInputStream(con.getInputStream());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(con!=null) {
+				con.disconnect();
+			}
+		}
+		return rtnval;
+	}
+	
+	public static String getStringFromInputStream(InputStream in) {
+		BufferedReader bufferedReader = null;
+		StringBuilder sb = null;
+		try {
+			bufferedReader = new BufferedReader(new InputStreamReader(in)); 
 			String line =null;
 			sb= new StringBuilder();
 			while((line=bufferedReader.readLine())!=null) {
@@ -86,9 +89,6 @@ public class HttpOrHttpsURLConnectionExample {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			if(con!=null) {
-				con.disconnect();
 			}
 		}
 		return sb==null?null:sb.toString();
