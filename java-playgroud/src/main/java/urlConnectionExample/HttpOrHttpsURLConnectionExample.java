@@ -14,10 +14,14 @@ public class HttpOrHttpsURLConnectionExample {
 
 	public static void main(String[] args) {
 		String url ="https://www.naver.com";
-		if(url.toUpperCase().indexOf("HTTPS")!=-1) {
-			System.out.println(connectHttpsUrl(url));
+		System.out.println(connectUrl(url));
+	}
+	
+	public static String connectUrl(String strUrl) {
+		if(strUrl.toUpperCase().indexOf("HTTPS")!=-1) {
+			return connectHttpsUrl(strUrl);
 		}else {
-			System.out.println(connectHttpUrl(url));
+			return connectHttpUrl(strUrl);
 		}
 	}
 	
@@ -78,8 +82,6 @@ public class HttpOrHttpsURLConnectionExample {
 				sb.append(line);
 				sb.append(System.lineSeparator());
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
