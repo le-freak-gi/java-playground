@@ -1,4 +1,4 @@
-package example.Xml;
+package example.xml;
 
 public class XmlExample {
 
