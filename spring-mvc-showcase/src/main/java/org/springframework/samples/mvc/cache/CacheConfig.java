@@ -26,4 +26,5 @@ public class CacheConfig {
         ehCacheCacheManager.setCacheManager(ehCacheManagerFactoryBean.getObject());
         return ehCacheCacheManager;
     }
+    
 }
