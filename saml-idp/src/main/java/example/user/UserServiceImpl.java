@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Strings;
+
 @Service("userService")
 public class UserServiceImpl implements UserService{
 	
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Map<String, String> login(User user) {
 		Map<String, String> rtnMap = new HashMap<String,String>();
-		if(user==null||user.getUserId()==null||user.getUserId().isEmpty()||user.getUserPassword()==null||user.getUserPassword().isEmpty()) {
+		if(user==null||Strings.isNullOrEmpty(user.getUserId())||Strings.isNullOrEmpty(user.getUserPassword())) {
 			rtnMap.put(UserServiceCode.USER_SERVICE.value(), UserServiceCode.INVALID_ID_OR_PASSWORD.value());
 		}else {
 			Optional<User> selectedUser = findById(user.getUserId()); 
