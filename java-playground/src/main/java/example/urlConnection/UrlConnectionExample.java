@@ -20,14 +20,14 @@ public class UrlConnectionExample {
 		Map<String,Object> params = new HashMap<String, Object>();
 		UrlConnectionExample urlConnectionExample = new UrlConnectionExample();
 		
-		System.out.println(urlConnectionExample.getUrlResponse(url, HttpConstantEnumExample.GET.name(),contentType, params));
+		System.out.println(urlConnectionExample.getUrlResponse(url, HttpConstantEnumExample.GET.value(),contentType, params));
 	}
 	
 	public String getUrlResponse(String strUrl, String httpMethod, String contentType, Map<String,Object> params) {
 		URL url=null;
 		byte[] postDataBytes =null;
 		if(params!=null&&!params.isEmpty()) {
-			if(httpMethod.toUpperCase().equals(HttpConstantEnumExample.GET.name())) {
+			if(httpMethod.toUpperCase().equals(HttpConstantEnumExample.GET.value())) {
 				strUrl+="?"+makeStringMethodParam(params);
 			}else {
 				try {
@@ -47,7 +47,7 @@ public class UrlConnectionExample {
 	
 	public String getUrlResponse(String strUrl, URL url, String httpMethod, String contentType, byte[] postDataBytes) {
 		if(url!=null) {
-			if(strUrl.toUpperCase().indexOf(HttpConstantEnumExample.HTTPS.name())!=-1) {
+			if(strUrl.toUpperCase().indexOf(HttpConstantEnumExample.HTTPS.value())!=-1) {
 				return getHttpsUrlResponse(url, httpMethod, contentType, postDataBytes);
 			}else {
 				return getHttpUrlResponse(url, httpMethod, contentType, postDataBytes);
@@ -81,9 +81,9 @@ public class UrlConnectionExample {
 		try {
 			conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod(httpMethod.toUpperCase());
-			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.name(), contentType);
+			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.value(), contentType);
 			if(postDataBytes!=null&&postDataBytes.length>0) {
-				conn.setRequestProperty(HttpConstantEnumExample.CONTENT_LENGTH.name(), String.valueOf(postDataBytes.length));
+				conn.setRequestProperty(HttpConstantEnumExample.CONTENT_LENGTH.value(), String.valueOf(postDataBytes.length));
 				conn.setDoOutput(true);
 				conn.getOutputStream().write(postDataBytes);
 			}
@@ -106,9 +106,9 @@ public class UrlConnectionExample {
 		try {
 			conn = (HttpsURLConnection)url.openConnection();
 			conn.setRequestMethod(httpMethod.toUpperCase());
-			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.name(), contentType);
+			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.value(), contentType);
 			if(postDataBytes!=null&&postDataBytes.length>0) {
-				conn.setRequestProperty(HttpConstantEnumExample.CONTENT_LENGTH.name(), String.valueOf(postDataBytes.length));
+				conn.setRequestProperty(HttpConstantEnumExample.CONTENT_LENGTH.value(), String.valueOf(postDataBytes.length));
 				conn.setDoOutput(true);
 				conn.getOutputStream().write(postDataBytes);
 			}
@@ -146,6 +146,9 @@ enum HttpConstantEnumExample {
 	private String value;
 	private HttpConstantEnumExample(String value) {
 		this.value=value;
+	}
+	public String value() {
+		return this.value;
 	}
 	
 }
