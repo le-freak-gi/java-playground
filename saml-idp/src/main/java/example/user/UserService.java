@@ -14,5 +14,5 @@ public interface UserService {
 	
 	public void deleteById(String userId);
 	
-	public Map<String, String> login(String userId, String userPassword);
+	public Map<String, String> login(User user);
 }

@@ -22,10 +22,10 @@ public class UserController {
 	UserService userService; 
 	
 	//MediaType.APPLICATION_FORM_URLENCODED_VALUE
-	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 	public ResponseEntity<Object> login(User user) {
-		Map<String,String> resultMap = userService.login(user.getUserId(), user.getUserPassword());
-		System.out.println(resultMap);
+		Map<String,String> resultMap = userService.login(user);
+		logger.info("###################################"+resultMap);
 		return ResponseEntity.ok(resultMap);
 	}
 }

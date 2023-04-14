@@ -12,7 +12,6 @@ public class User {
 	@Column(nullable = false)
 	private String userId;
 	
-	@GeneratedValue
 	private String userNo;
 	
 	@Column(nullable = false)
