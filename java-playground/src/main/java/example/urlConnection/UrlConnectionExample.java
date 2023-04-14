@@ -1,8 +1,12 @@
 package example.urlConnection;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -12,15 +16,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import org.json.simple.JSONObject;
+
 public class UrlConnectionExample {
 
 	public static void main(String[] args) {
-		String url ="http://www.google.com";
+		String url ="http://localhost:8080/user/login";
 		String contentType = "application/x-www-form-urlencoded";
 		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("userId", "abc1");
+		params.put("userPassword", "12345");
 		UrlConnectionExample urlConnectionExample = new UrlConnectionExample();
+		System.out.println(urlConnectionExample.getUrlResponse(url, HttpConstantEnumExample.POST.value(),contentType, params));
 		
-		System.out.println(urlConnectionExample.getUrlResponse(url, HttpConstantEnumExample.GET.value(),contentType, params));
+		
+		url ="http://localhost:8080/user/login2";
+		contentType = "application/json";
+		JSONObject json = new JSONObject();
+		json.put("userId", "abc1");
+		json.put("userPassword", "12345");
+		System.out.println(urlConnectionExample.getUrlResponseJsonParam(url, HttpConstantEnumExample.POST.value(), contentType, json));
 	}
 	
 	public String getUrlResponse(String strUrl, String httpMethod, String contentType, Map<String,Object> params) {
@@ -43,6 +59,46 @@ public class UrlConnectionExample {
 			e.printStackTrace();
 		}
 		return getUrlResponse(strUrl, url, httpMethod, contentType, postDataBytes);
+	}
+
+	public String getUrlResponseJsonParam(String strUrl, String httpMethod, String contentType, JSONObject json) {
+		String rtnVal = null;
+		HttpURLConnection conn = null;
+		OutputStream os = null;
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(strUrl);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setRequestMethod(httpMethod);
+			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.value(), contentType);
+			os = conn.getOutputStream();
+			os.write(json.toJSONString().getBytes("UTF-8"));
+			os.flush();
+			reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			rtnVal = bufferedReaderToString(reader);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(reader!=null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(os!=null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn!=null) {
+				conn.disconnect();
+			}
+		}
+		return rtnVal;
 	}
 	
 	public String getUrlResponse(String strUrl, URL url, String httpMethod, String contentType, byte[] postDataBytes) {
