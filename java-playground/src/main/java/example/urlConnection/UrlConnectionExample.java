@@ -68,10 +68,9 @@ public class UrlConnectionExample {
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod(httpMethod);
-			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.value(), contentType);
+			conn.setRequestProperty(HttpConstantEnumExample.CONTENT_TYPE.value(), "application/json");
 			os = conn.getOutputStream();
 			os.write(json.toJSONString().getBytes("UTF-8"));
-			os.flush();
 			reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 			rtnVal = bufferedReaderToString(reader);
 		} catch (Exception e) {
@@ -86,6 +85,7 @@ public class UrlConnectionExample {
 			}
 			if(os!=null) {
 				try {
+					os.flush();
 					os.close();
 				} catch (IOException e) {
 					e.printStackTrace();
