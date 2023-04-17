@@ -118,7 +118,15 @@ public class ZipExample {
 			fos = new FileOutputStream(zipFileName);
 			zipOut = new ZipOutputStream(fos);
 			File fileToZip = new File(targetPath);
-			zipFile(fileToZip, fileToZip.getName(), zipOut);
+			if(fileToZip.isDirectory()) {
+				for(String fileName : fileToZip.list()) {
+					String filePath = targetPath+File.separator+fileName;
+					File file = new File(filePath);
+					zipFile(file, fileName, zipOut);
+				}
+			}else {
+				zipFile(fileToZip, fileToZip.getName(), zipOut);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw e;

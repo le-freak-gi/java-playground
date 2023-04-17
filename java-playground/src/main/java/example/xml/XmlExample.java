@@ -23,27 +23,82 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XmlExample {
-
+	
+	public XmlExample() {
+		
+	}
+	
+	public XmlExample(String filePath) throws Exception {
+		this.filePath = filePath; 
+		this.document = parseXmlFile(filePath);
+	}
+	
+	private String filePath;
+	
+	private Document document;
+	
 	public static void main(String[] args) {
 		
-		XmlExample xmlExample = new XmlExample();
-		String filePath = "C:/zipTest/test3/Contents/section0.xml";
-		String text ="문서 제목 [HY헤드라인M 22pt]";
+		String filePath = "C:/\\zipTest/\\test - 복사본/\\Contents/\\section0.xml";
+		String text ="문서 제목 [HY헤드라인M 22pt]-test";
 		String id = "documentTitle";
 	      try {
-	    	  Document document = xmlExample.parseXmlFile(filePath);
+	    	  
+	    	  XmlExample xmlExample = new XmlExample(filePath);
+	    	  
+	    	  System.out.println(xmlExample.getXmlContentTextById(id));
 	          
-	          System.out.println(xmlExample.getNodeTextContentById(document, id));
-	          if(xmlExample.setNodeTextContentById(document, id,  text)) {
-	        	  System.out.println(xmlExample.getNodeTextContentById(document, id));
-	          }
+	          xmlExample.setXmlContentById(id,  text);
 	          
-	          xmlExample.writeXmlFile(document, filePath);
-	          
+	          System.out.println(xmlExample.getXmlContentTextById(id));
 	      } catch (Exception e) {
 	          e.printStackTrace();
 	      } 
 
+	}
+	
+	public void setXmlContentById(String filePath, String id, String text) throws Exception {
+		try {
+			this.document = parseXmlFile(filePath);
+			setXmlContentById(id, text);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	public void setXmlContentById(String id, String text) throws Exception {
+		try {
+			if(setNodeTextContentById(this.document, id,  text)) {
+				writeXmlFile(this.document, this.filePath);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	public String getXmlContentTextById(String filePath, String id) throws Exception {
+	  	  String text =null;
+			try {
+				this.document = parseXmlFile(filePath);
+				text = getXmlContentTextById(id);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+			return text;
+	}
+
+	public String getXmlContentTextById(String id) throws Exception {
+	  	  String text =null;
+			try {
+				text = getNodeTextContentById(this.document, id);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+			return text;
 	}
 	
 	public void writeXmlFile(Document document, String filePath) throws Exception {
@@ -64,6 +119,10 @@ public class XmlExample {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 			throw e;
+		} finally {
+			if(writer!=null) {
+				writer.close();
+			}
 		}
 	}
 	
